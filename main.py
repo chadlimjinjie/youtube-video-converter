@@ -24,24 +24,38 @@ def slugify(value, allow_unicode=False):
     value = re.sub(r'[^\w\s-]', '', value.lower())
     return re.sub(r'[-\s]+', '-', value).strip('-_')
 
-# https://www.youtube.com/watch?v=sFIbcgHrGSg
 
+# https://www.youtube.com/watch?v=sFIbcgHrGSg
 
 try:
     while True:
+        print("* "*10 + "YouTube Video Converter" + " *"*10)
         link = input("Enter video link > ")
+        print("* "*10 + "Video Format" + " *"*10)
+        print("1. MP3")
+        print("2. MP4")
+        print("3. BOTH")
+        format = input("Enter video format > ").lower()
         try:
+
             yt = YouTube(link)
-
             yt.title = slugify(yt.title)
-            yt.streams.first().download()
-            yt.streams.filter(progressive=True, file_extension='mp4').order_by(
-                'resolution').desc().first().download()
-            time.sleep(1)
 
-            os.rename(f'{yt.title}.3gpp', f'{yt.title}.mp3')
-
-            print("MP4 & MP3 downloaded")
+            if format == "1" or format == "mp3":
+              yt.streams.first().download()
+              os.rename(f'{yt.title}.3gpp', f'{yt.title}.mp3')
+              print("MP3 downloaded")
+            elif format == "2" or format == "mp4":
+              yt.streams.filter(progressive=True, file_extension='mp4').order_by('resolution').desc().first().download()
+              print("MP4 downloaded")
+            elif format == "3" or format == "both":
+              yt.streams.first().download()
+              yt.streams.filter(progressive=True, file_extension='mp4').order_by('resolution').desc().first().download()
+              os.rename(f'{yt.title}.3gpp', f'{yt.title}.mp3')
+              print("MP3 and MP4 downloaded")
+            else:
+              print("Invalid format")
+            
         except Exception as e:
             print(e)
 
