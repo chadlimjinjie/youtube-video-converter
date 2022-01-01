@@ -6,6 +6,8 @@ import re
 import os
 import time
 
+import uuid
+
 def slugify(value, allow_unicode=False):
     """
     Taken from https://github.com/django/django/blob/master/django/utils/text.py
@@ -39,8 +41,10 @@ try:
         try:
 
             yt = YouTube(link)
+            # print(yt.title)
             yt.title = slugify(yt.title)
-
+            # yt.title = str(uuid.uuid4())
+            
             if format == "1" or format == "mp3":
               yt.streams.first().download()
               os.rename(f'{yt.title}.3gpp', f'{yt.title}.mp3')
